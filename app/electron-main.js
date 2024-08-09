@@ -6,7 +6,7 @@ const path = require("path");
 let mainWindow;
 
 // Function to create the main application window
-function createWindow() {
+function createWindow(fileToOpen = null) {
   mainWindow = new BrowserWindow({
     width: 1100,
     height: 800,
@@ -15,26 +15,35 @@ function createWindow() {
     },
   });
 
-  // Load the HTML file into the main window
-  mainWindow.loadFile(path.join(__dirname, "index.html"));
+  let startUrl = `file://${path.join(__dirname, "index.html")}`;
+  if (fileToOpen) {
+    startUrl += `?project=${encodeURIComponent(fileToOpen)}`;
+  }
 
-  // Event handler for when the main window is closed
+  mainWindow.loadURL(startUrl);
+
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
 }
 
 // Create the main window when the app is ready
-app.whenReady().then(createWindow);
-
-// Quit the app when all windows are closed (except on macOS)
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
+app.whenReady().then(() => {
+  const fileToOpen = process.argv.length >= 2 ? process.argv[1] : null;
+  createWindow(fileToOpen);
 });
 
-// Create a new window when the app is activated (on macOS)
-app.on("activate", () => {
-  if (mainWindow === null) createWindow();
+// Quit the app when all windows are closed
+app.on("window-all-closed", () => {
+  app.quit();
+});
+
+// Handle the second instance of the app (for Windows/Linux)
+app.on('second-instance', (event, argv) => {
+  const filePath = argv.length >= 2 ? argv[1] : null;
+  if (filePath && mainWindow) {
+    mainWindow.loadURL(`file://${path.join(__dirname, 'index.html')}?project=${encodeURIComponent(filePath)}`);
+  }
 });
 
 // IPC (Inter-Process Communication) handlers for window control
