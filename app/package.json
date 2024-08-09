@@ -6,8 +6,10 @@
     "fileAssociations": [
       {
         "ext": "pmp",
-        "name": "PMP File",
-        "role": "Editor"
+        "name": "Penguinmod Project",
+        "description": "Penguinmod Project File",
+        "mimeType": "application/x-pmp",
+        "icon": "./icon.ico"
       }
     ]
   },
