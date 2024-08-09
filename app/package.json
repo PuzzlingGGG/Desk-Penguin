@@ -1,5 +1,17 @@
 {
-    "name": "pmdesktop",
-    "main": "electron-main.js",
-    "version": "1.0.0"
+  "name": "pmdesktop",
+  "main": "electron-main.js",
+  "version": "1.0.0",
+  "build": {
+    "fileAssociations": [
+      {
+        "ext": "pmp",
+        "name": "PMP File",
+        "role": "Editor"
+      }
+    ]
+  },
+  "scripts": {
+    "start": "electron ."
+  }
 }
